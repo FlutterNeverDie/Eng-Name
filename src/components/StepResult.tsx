@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNameStore } from '../store/nameStore';
 import type { Gender, Vibe } from '../data/nameData';
 import { VIBES } from '../data/nameData';
+import { useTossInterstitialAd } from '../hooks/useTossInterstitialAd';
 
 const VIBE_EMOJI: Record<string, string> = {
   지적: '📚',
@@ -36,6 +37,8 @@ export default function StepResult() {
     reset,
   } = useNameStore();
 
+  const { showAd } = useTossInterstitialAd();
+
   // "다른 이름 더 보기" 패널 로컬 상태
   const [showPicker, setShowPicker] = useState(false);
   const [pickerVibe, setPickerVibe] = useState<Vibe | null>(currentVibe);
@@ -46,18 +49,20 @@ export default function StepResult() {
   const fullEnglishName = `${selectedName.english_name} ${surnameRoman}`;
 
   const handleOpenPicker = () => {
-    // 패널 열 때 현재 조건으로 초기화
     setPickerVibe(currentVibe);
     setPickerGender(currentGender);
     setShowPicker(true);
   };
 
   const handlePickWithStyle = () => {
-    // 선택한 조건을 스토어에 반영 후 새 이름 뽑기
-    if (pickerGender) setGender(pickerGender);
-    if (pickerVibe) setVibe(pickerVibe);
-    pickAnotherName();
-    setShowPicker(false);
+    if (!pickerGender || !pickerVibe) return;
+    // 광고 노출 → 광고가 닫힌 후 새 이름 생성
+    showAd(() => {
+      setGender(pickerGender);
+      setVibe(pickerVibe);
+      pickAnotherName();
+      setShowPicker(false);
+    });
   };
 
   const handleSaveImage = () => {

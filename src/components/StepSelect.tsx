@@ -1,6 +1,7 @@
 import { useNameStore } from '../store/nameStore';
 import type { Gender, Vibe } from '../data/nameData';
 import { VIBES } from '../data/nameData';
+import { useTossInterstitialAd } from '../hooks/useTossInterstitialAd';
 
 const GENDER_OPTIONS: { value: Gender; label: string; emoji: string }[] = [
   { value: 'M', label: '남성스러운', emoji: '♂' },
@@ -18,11 +19,15 @@ const VIBE_EMOJI: Record<Vibe, string> = {
 
 export default function StepSelect() {
   const { koreanName, gender, vibe, setGender, setVibe, goToStep, pickName } = useNameStore();
+  const { showAd } = useTossInterstitialAd();
 
   const handleAnalyze = () => {
     if (!gender || !vibe) return;
-    pickName();
-    goToStep(3);
+    // 광고 노출 → 광고가 닫힌 후 이름 생성 + 분석 화면 전환
+    showAd(() => {
+      pickName();
+      goToStep(3);
+    });
   };
 
   return (
