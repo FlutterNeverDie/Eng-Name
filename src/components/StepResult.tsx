@@ -154,7 +154,7 @@ export default function StepResult() {
 
     ctx.fillStyle = '#55556a';
     ctx.font = '400 11px -apple-system, sans-serif';
-    const wmText = '내 이름 영문판';
+    const wmText = '영어 이름 만들기';
     ctx.fillText(wmText, W - 28 - ctx.measureText(wmText).width, H - 28);
 
     const url = canvas.toDataURL('image/png');
@@ -202,7 +202,7 @@ export default function StepResult() {
           <span className="card-tag">#{selectedName.initial}초성</span>
         </div>
 
-        <div className="card-watermark">내 이름 영문판</div>
+        <div className="card-watermark">영어 이름 만들기</div>
       </div>
 
       {/* 스타일 선택 패널 (다른 이름 더 보기) */}

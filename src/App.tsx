@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import './App.css';
 import { useNameStore } from './store/nameStore';
+import StepIntro from './components/StepIntro';
 import StepInput from './components/StepInput';
 import StepSelect from './components/StepSelect';
 import StepAnalyzing from './components/StepAnalyzing';
@@ -14,12 +16,20 @@ const STEP_COMPONENTS = {
   4: StepResult,
 } as const;
 
+// 스텝 전환 공통 애니메이션
+const stepVariants = {
+  initial: { opacity: 0, x: 24 },
+  animate: { opacity: 1, x: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+  exit:    { opacity: 0, x: -24, transition: { duration: 0.2, ease: 'easeIn' } },
+};
+
 export default function App() {
-  const step = useNameStore((s) => s.step);
+  const isIntro = useNameStore((s) => s.isIntro);
+  const step    = useNameStore((s) => s.step);
   const StepComponent = STEP_COMPONENTS[step];
   const { preload } = useTossInterstitialAd();
 
-  // 앱 최초 진입 시 즉시 광고 로드 시작 — 사용자가 입력하는 동안 백그라운드에서 준비됩니다.
+  // 앱 최초 진입 시 즉시 광고 로드 시작
   useEffect(() => {
     preload();
   }, [preload]);
@@ -27,7 +37,22 @@ export default function App() {
   return (
     <div className="app">
       <div className="app-inner">
-        <StepComponent />
+        <AnimatePresence mode="wait">
+          {isIntro ? (
+            <StepIntro key="intro" />
+          ) : (
+            <motion.div
+              key={`step-${step}`}
+              variants={stepVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+            >
+              <StepComponent />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

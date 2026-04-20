@@ -7,6 +7,7 @@ import { parseKoreanName } from '../utils/korean';
 export type Step = 1 | 2 | 3 | 4;
 
 interface NameStore {
+  isIntro: boolean;
   step: Step;
   koreanName: string;
   surname: string;
@@ -19,6 +20,7 @@ interface NameStore {
   selectedName: NameEntry | null;
   usedNames: Set<string>;
 
+  startApp: () => void;
   setKoreanName: (name: string) => void;
   setGender: (gender: Gender) => void;
   setVibe: (vibe: Vibe) => void;
@@ -34,12 +36,6 @@ function findName(
   vibe: Vibe | null,
   exclude: Set<string>,
 ): NameEntry | null {
-  // 1순위: initial + gender + vibe 정확 매칭
-  // 2순위: initial + gender (vibe 무관)
-  // 3순위: initial + U (universal) gender
-  // 4순위: initial 만 매칭 (어떤 이름이든)
-  // 5순위: 전체 랜덤 (초성이 없을 때 fallback)
-
   const pool = NAME_DATA.filter((e) => !exclude.has(e.english_name));
 
   const strategies: Array<(e: NameEntry) => boolean> = [
@@ -58,11 +54,11 @@ function findName(
     }
   }
 
-  // exclude 제거 후 재시도 (모든 이름을 다 쓴 경우)
   return NAME_DATA[Math.floor(Math.random() * NAME_DATA.length)];
 }
 
 export const useNameStore = create<NameStore>((set, get) => ({
+  isIntro: true,
   step: 1,
   koreanName: '',
   surname: '',
@@ -74,6 +70,8 @@ export const useNameStore = create<NameStore>((set, get) => ({
   vibe: null,
   selectedName: null,
   usedNames: new Set(),
+
+  startApp: () => set({ isIntro: false }),
 
   setKoreanName: (name) => {
     const parsed = parseKoreanName(name);
@@ -116,6 +114,7 @@ export const useNameStore = create<NameStore>((set, get) => ({
 
   reset: () =>
     set({
+      isIntro: false,
       step: 1,
       koreanName: '',
       surname: '',

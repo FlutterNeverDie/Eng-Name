@@ -37,6 +37,112 @@
 }
 
 /* =========================================
+   Intro
+   ========================================= */
+.intro-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 60px 24px 40px;
+  min-height: 100vh;
+}
+
+.intro-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.intro-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  background: rgba(242, 201, 76, 0.12);
+  border: 1px solid rgba(242, 201, 76, 0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
+}
+
+.intro-title {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -2px;
+  margin: 0;
+}
+
+.intro-sub {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--accent);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* 예시 이름 순환 카드 */
+.intro-demo-card {
+  background: linear-gradient(135deg, #1c1c32, #16162a);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin: 4px 0;
+}
+
+.intro-demo-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-demo-korean {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+}
+
+.intro-demo-arrow {
+  font-size: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.intro-demo-english {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.intro-demo-name {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.intro-demo-surname {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.intro-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.intro-footer {
+  padding-top: 16px;
+}
+
+/* =========================================
    Step Container
    ========================================= */
 .step-container {
