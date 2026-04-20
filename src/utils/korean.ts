@@ -66,6 +66,38 @@ export function parseKoreanName(fullName: string): {
   return { surname, firstName, firstNameChar, initial };
 }
 
+// 국립국어원 로마자 표기법 기준 (초성 19개)
+const ROMAN_INITIAL = ['g','kk','n','d','tt','r','m','b','pp','s','ss','','j','jj','ch','k','t','p','h'];
+// 중성 21개
+const ROMAN_VOWEL = ['a','ae','ya','yae','eo','e','yeo','ye','o','wa','wae','oe','yo','u','wo','we','wi','yu','eu','ui','i'];
+// 종성 28개 (0 = 받침 없음)
+const ROMAN_FINAL = ['','k','k','k','n','n','n','t','l','k','m','p','l','l','p','l','m','p','p','t','t','ng','t','t','k','t','p',''];
+
+/**
+ * 한글 음절 하나를 로마자로 변환합니다 (국립국어원 표준 기반).
+ * 한글 음절이 아니면 원문자를 반환합니다.
+ */
+export function romanizeSyllable(char: string): string {
+  const code = char.charCodeAt(0);
+  if (code < 0xac00 || code > 0xd7a3) return char;
+
+  const offset = code - 0xac00;
+  const finalIdx  = offset % 28;
+  const vowelIdx  = Math.floor(offset / 28) % 21;
+  const initialIdx = Math.floor(offset / 28 / 21);
+
+  return ROMAN_INITIAL[initialIdx] + ROMAN_VOWEL[vowelIdx] + ROMAN_FINAL[finalIdx];
+}
+
+/**
+ * 한글 단어(성씨 등)를 로마자로 변환하고 첫 글자를 대문자로 만듭니다.
+ * map에 없는 성씨에 대한 fallback으로 사용합니다.
+ */
+export function romanizeKoreanWord(word: string): string {
+  const romanized = [...word].map(romanizeSyllable).join('');
+  return romanized.charAt(0).toUpperCase() + romanized.slice(1);
+}
+
 /**
  * 입력값이 한글 이름인지 검증합니다.
  */

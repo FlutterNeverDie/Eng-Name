@@ -1,4 +1,6 @@
-// 한글 성씨 → 로마자 표기법 (국립국어원 표준)
+import { romanizeKoreanWord } from '../utils/korean';
+
+// 한글 성씨 → 로마자 표기법 (국립국어원 표준 + 관용 표기)
 export const SURNAME_MAP: Record<string, string> = {
   김: 'Kim',
   이: 'Lee',
@@ -83,6 +85,13 @@ export const SURNAME_MAP: Record<string, string> = {
   경: 'Kyung',
 };
 
+/**
+ * 한글 성씨를 로마자로 변환합니다.
+ * - map에 있으면 표준/관용 표기 사용
+ * - map에 없으면 음절 분해 로마자화 fallback (예: 상 → Sang)
+ */
 export function romanizeSurname(surname: string): string {
-  return SURNAME_MAP[surname] ?? surname;
+  if (SURNAME_MAP[surname]) return SURNAME_MAP[surname];
+  // 복성(두 글자)도 글자별로 변환 후 합성
+  return romanizeKoreanWord(surname);
 }
