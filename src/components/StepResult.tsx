@@ -12,10 +12,10 @@ const VIBE_EMOJI: Record<string, string> = {
   클래식: '👑',
 };
 
-const GENDER_OPTIONS: { value: Gender; label: string; emoji: string }[] = [
-  { value: 'M', label: '남성스러운', emoji: '♂' },
-  { value: 'F', label: '여성스러운', emoji: '♀' },
-  { value: 'U', label: '중성적인', emoji: '✦' },
+const GENDER_OPTIONS: { value: Gender; label: string; emoji: string; color: string }[] = [
+  { value: 'M', label: '남성스러운', emoji: '♂', color: '#5b9cf6' },
+  { value: 'F', label: '여성스러운', emoji: '♀', color: '#f472b6' },
+  { value: 'U', label: '중성적인', emoji: '✦', color: '#c084fc' },
 ];
 
 const GENDER_LABEL: Record<string, string> = {
@@ -49,23 +49,23 @@ export default function StepResult() {
   const fullEnglishName = `${selectedName.english_name} ${surnameRoman}`;
 
   const handleOpenPicker = () => {
-    setPickerVibe(currentVibe);
-    setPickerGender(currentGender);
-    setShowPicker(true);
+    // 광고 노출 → 광고가 닫힌 후 스타일 선택 패널 오픈
+    showAd(() => {
+      setPickerVibe(currentVibe);
+      setPickerGender(currentGender);
+      setShowPicker(true);
+    });
   };
 
   const handlePickWithStyle = () => {
     if (!pickerGender || !pickerVibe) return;
-    // 광고 노출 → 광고가 닫힌 후 새 이름 생성
-    showAd(() => {
-      setGender(pickerGender);
-      setVibe(pickerVibe);
-      pickAnotherName();
-      setShowPicker(false);
-    });
+    setGender(pickerGender);
+    setVibe(pickerVibe);
+    pickAnotherName();
+    setShowPicker(false);
   };
 
-  const handleSaveImage = () => {
+  const drawNameCard = (): HTMLCanvasElement | null => {
     const canvas = document.createElement('canvas');
     const DPR = 2;
     const W = 360;
@@ -76,7 +76,7 @@ export default function StepResult() {
     canvas.style.height = `${H}px`;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) return null;
     ctx.scale(DPR, DPR);
 
     ctx.fillStyle = '#13131f';
@@ -157,11 +157,37 @@ export default function StepResult() {
     const wmText = '영어 이름 만들기';
     ctx.fillText(wmText, W - 28 - ctx.measureText(wmText).width, H - 28);
 
-    const url = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${fullEnglishName.replace(/\s/g, '_')}_name_card.png`;
-    a.click();
+    return canvas;
+  };
+
+  const handleShare = () => {
+    const canvas = drawNameCard();
+    if (!canvas) return;
+
+    const fileName = `${fullEnglishName.replace(/\s/g, '_')}_name_card.png`;
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], fileName, { type: 'image/png' });
+
+      try {
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: `${koreanName}의 영어 이름: ${fullEnglishName}`,
+          });
+        } else {
+          // 공유 미지원 환경에서는 이미지 다운로드로 fallback
+          const url = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          a.click();
+        }
+      } catch {
+        // 사용자가 공유를 취소한 경우 등 무시
+      }
+    }, 'image/png');
   };
 
   return (
@@ -219,7 +245,7 @@ export default function StepResult() {
                   className={`chip chip--sm${pickerGender === opt.value ? ' chip--active' : ''}`}
                   onClick={() => setPickerGender(opt.value)}
                 >
-                  <span className="chip-emoji">{opt.emoji}</span>
+                  <span className="chip-emoji" style={{ color: opt.color }}>{opt.emoji}</span>
                   {opt.label}
                 </button>
               ))}
@@ -259,8 +285,8 @@ export default function StepResult() {
       {/* 액션 버튼 */}
       {!showPicker && (
         <div className="result-actions">
-          <button className="btn btn--primary" onClick={handleSaveImage}>
-            이미지로 저장
+          <button className="btn btn--primary" onClick={handleShare}>
+            공유하기
           </button>
           <button className="btn btn--secondary" onClick={handleOpenPicker}>
             다른 이름 더 보기

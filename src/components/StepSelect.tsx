@@ -3,10 +3,10 @@ import type { Gender, Vibe } from '../data/nameData';
 import { VIBES } from '../data/nameData';
 import { useTossInterstitialAd } from '../hooks/useTossInterstitialAd';
 
-const GENDER_OPTIONS: { value: Gender; label: string; emoji: string }[] = [
-  { value: 'M', label: '남성스러운', emoji: '♂' },
-  { value: 'F', label: '여성스러운', emoji: '♀' },
-  { value: 'U', label: '중성적인', emoji: '✦' },
+const GENDER_OPTIONS: { value: Gender; label: string; emoji: string; color: string }[] = [
+  { value: 'M', label: '남성스러운', emoji: '♂', color: '#5b9cf6' },
+  { value: 'F', label: '여성스러운', emoji: '♀', color: '#f472b6' },
+  { value: 'U', label: '중성적인', emoji: '✦', color: '#c084fc' },
 ];
 
 const VIBE_EMOJI: Record<Vibe, string> = {
@@ -51,7 +51,7 @@ export default function StepSelect() {
               className={`chip${gender === opt.value ? ' chip--active' : ''}`}
               onClick={() => setGender(opt.value)}
             >
-              <span className="chip-emoji">{opt.emoji}</span>
+              <span className="chip-emoji" style={{ color: opt.color }}>{opt.emoji}</span>
               {opt.label}
             </button>
           ))}
