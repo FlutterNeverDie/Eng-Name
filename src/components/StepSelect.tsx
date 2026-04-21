@@ -4,8 +4,8 @@ import { VIBES } from '../data/nameData';
 import { useTossInterstitialAd } from '../hooks/useTossInterstitialAd';
 
 const GENDER_OPTIONS: { value: Gender; label: string; emoji: string; color: string }[] = [
-  { value: 'M', label: '남성스러운', emoji: '♂', color: '#5b9cf6' },
-  { value: 'F', label: '여성스러운', emoji: '♀', color: '#f472b6' },
+  { value: 'M', label: '남성스러운', emoji: '👨', color: '#5b9cf6' },
+  { value: 'F', label: '여성스러운', emoji: '👩', color: '#f472b6' },
   { value: 'U', label: '중성적인', emoji: '✦', color: '#c084fc' },
 ];
 

@@ -13,9 +13,9 @@ const VIBE_EMOJI: Record<string, string> = {
 };
 
 const GENDER_OPTIONS: { value: Gender; label: string; emoji: string; color: string }[] = [
-  { value: 'M', label: '남성스러운', emoji: '♂', color: '#5b9cf6' },
-  { value: 'F', label: '여성스러운', emoji: '♀', color: '#f472b6' },
-  { value: 'U', label: '중성적인', emoji: '✦', color: '#c084fc' },
+  { value: 'M', label: '남성스러운', emoji: '👨', color: '#5b9cf6' },
+  { value: 'F', label: '여성스러운', emoji: '👩', color: '#f472b6' },
+  { value: 'U', label: '중성적인', emoji: '🧑', color: '#c084fc' },
 ];
 
 const GENDER_LABEL: Record<string, string> = {
@@ -297,7 +297,7 @@ export default function StepResult() {
             공유하기
           </button>
           <button className="btn btn--secondary" onClick={handleOpenPicker}>
-            다른 이름 더 보기
+            다른 스타일로 더 보기
           </button>
           <button className="btn btn--ghost" onClick={reset}>
             다시 시작
