@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "granite dev",
     "build": "ait build",
-    "deploy": "ait deploy",
+    "deploy": "npm run build && ait deploy",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
