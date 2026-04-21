@@ -49,20 +49,22 @@ export default function StepResult() {
   const fullEnglishName = `${selectedName.english_name} ${surnameRoman}`;
 
   const handleOpenPicker = () => {
-    // 광고 노출 → 광고가 닫힌 후 스타일 선택 패널 오픈
-    showAd(() => {
-      setPickerVibe(currentVibe);
-      setPickerGender(currentGender);
-      setShowPicker(true);
-    });
+    // 광고 노출 없이 바로 스타일 선택 패널 오픈
+    setPickerVibe(currentVibe);
+    setPickerGender(currentGender);
+    setShowPicker(true);
   };
 
   const handlePickWithStyle = () => {
     if (!pickerGender || !pickerVibe) return;
-    setGender(pickerGender);
-    setVibe(pickerVibe);
-    pickAnotherName();
-    setShowPicker(false);
+
+    // 광고 노출 후 결과 적용
+    showAd(() => {
+      setGender(pickerGender);
+      setVibe(pickerVibe);
+      pickAnotherName();
+      setShowPicker(false);
+    });
   };
 
   const drawNameCard = (): HTMLCanvasElement | null => {
@@ -268,13 +270,19 @@ export default function StepResult() {
           </div>
 
           <div className="picker-actions">
-            <button
-              className="btn btn--primary"
-              onClick={handlePickWithStyle}
-              disabled={!pickerGender || !pickerVibe}
-            >
-              이 스타일로 보기
-            </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <button
+                className="btn btn--primary"
+                onClick={handlePickWithStyle}
+                disabled={!pickerGender || !pickerVibe}
+                style={{ width: '100%' }}
+              >
+                이 스타일로 보기
+              </button>
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 500, textAlign: 'center' }}>
+                광고 5초 노출
+              </span>
+            </div>
             <button className="btn btn--ghost" onClick={() => setShowPicker(false)}>
               취소
             </button>
