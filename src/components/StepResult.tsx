@@ -176,10 +176,11 @@ export default function StepResult() {
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
             files: [file],
-            title: `${koreanName}의 영어 이름: ${fullEnglishName}`,
+            title: `✨ ${koreanName}님의 특별한 영어 이름`,
+            text: `당신의 페르소나를 완성할 단 하나의 이름,\n[${fullEnglishName}] 입니다.\n\n${koreanName}님의 무드와 가장 어울리는 영어 이름을 지금 바로 만나보세요.\n\n나만의 특별한 이름 만들기 ✨\nhttps://minion.toss.im/dIO8af56`,
           });
         } else {
-          // 공유 미지원 환경에서는 이미지 다운로드로 fallback
+          // 공유 미지원 환경에서는 이미지 다운로드로 fallback 
           const url = canvas.toDataURL('image/png');
           const a = document.createElement('a');
           a.href = url;
